@@ -9,6 +9,8 @@ import SwiftUI
 import AppKit
 
 struct ContentView: View {
+    @State var summaryItems: [SummaryItem]?
+    
     var body: some View {
         VStack {
             Button("Browse Folder") {
@@ -38,7 +40,12 @@ struct ContentView: View {
                             print("Content: \(content)")
                             
                             // Send content to LLM for NER analysis
-                            Services.analyzeNER(with: content)
+                            Services.analyzeNERWithGemini(with: content) { summaryResponse in
+                                if let item = summaryResponse?.summary.first {
+                                    summaryItems?.append(item)
+                                }
+                                print("summaryItemss: \(String(describing: summaryItems))")
+                            }
                         }
                     }
                 } catch {
