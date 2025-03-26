@@ -8,9 +8,9 @@
 import Foundation
 
 class Services {
-    static func analyzeNERWithGemini(with content: String, completion: @escaping (SummaryResponse?) -> Void) {
+    static func analyzeNERWithGemini(with content: String, completion: @escaping (SummaryItem?) -> Void) {
         // Step 1: Prepare API request
-        let apiKey = "api-key" // Replace with your Gemini API key
+        let apiKey = "" // Replace with your Gemini API key
         guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=\(apiKey)") else {
             print("Invalid URL")
             return
@@ -59,12 +59,29 @@ class Services {
     
     
     // Method to decode text JSON
-    static func parseTextJson(_ text: String?) -> SummaryResponse? {
-        let jsonString = text?.replacingOccurrences(of: "```json", with: "").replacingOccurrences(of: "```", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
+    static func parseTextJson(_ text: String?) -> SummaryItem? {
+        guard let text = text else { return nil }
+        
+        // Ensure it's a proper JSON string by cleaning up potential unwanted markers
+        let cleanedJson = text
+            .replacingOccurrences(of: #"```json|```"#, with: "", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard let jsonData = cleanedJson.data(using: .utf8) else {
+            print("Error: Unable to convert string to Data")
+            return nil
+        }
+        
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try? decoder.decode(SummaryResponse.self, from: jsonData)
+        
+        do {
+            let response = try decoder.decode(SummaryItem.self, from: jsonData)
+            return response
+        } catch {
+            print("JSON Decoding Error: \(error)")
+            return nil
+        }
     }
 
 }

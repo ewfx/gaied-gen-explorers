@@ -45,18 +45,20 @@ struct SummaryResponse: Codable {
     let summary: [SummaryItem]
 }
 
-struct SummaryItem: Codable {
-    let filename: String
-    let issueSummary: String
-    let requestType: String
-    let requestSubtype: String
-    let confidenceScore: Int
-    let namedEntities: NamedEntities
+struct SummaryItem: Codable, Identifiable {
+    let id = UUID()
+    let filename: String?
+    let issueSummary: String?
+    let requestType: String?
+    let requestSubtype: String?
+    let confidenceScore: Int?
+    let namedEntities: NamedEntities?
+    
 }
 
 struct NamedEntities: Codable {
-    let ORG: [String]
-    let MONEY: [String]
-    let EMAIL: [String]
+    let ORG: [String]?
+    let MONEY: [String]?
+    let EMAIL: [String]?
 }
 
