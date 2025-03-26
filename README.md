@@ -17,48 +17,84 @@
 A brief overview of your project and its purpose. Mention which problem statement are your attempting to solve. Keep it concise and engaging.
 
 ## 🎥 Demo
-🔗 [Live Demo](#) (if applicable)  
-📹 [Video Demo](#) (if applicable)  
+📹 [Video Demo](link-to-image) 
 🖼️ Screenshots:
 
 ![Screenshot 1](link-to-image)
 
 https://github.com/user-attachments/assets/ec2b8f7f-8f28-4fcf-932d-03977b2a9e3c
 
+💡 Inspiration
 
+Commercial Bank Lending Service teams receive a significant volume of servicing requests through emails. These emails contain diverse requests, often with attachments, which must be processed efficiently. Currently, a manual triage process is used where gatekeepers read, interpret, classify, and route these requests. This process is time-consuming, error-prone, and inefficient at scale.
 
-## 💡 Inspiration
-What inspired you to create this project? Describe the problem you're solving.
+The challenge is to automate email classification and data extraction using Generative AI (LLMs) to improve efficiency, accuracy, and turnaround time while minimizing gatekeeping activities. Our Flutter desktop app provides a solution by leveraging AI to classify emails, extract relevant data, and facilitate skill-based routing of service requests.
 
-## ⚙️ What It Does
-Explain the key features and functionalities of your project.
+⚙️ What It Does
 
-## 🛠️ How We Built It
-Briefly outline the technologies, frameworks, and tools used in development.
+Parses .EML email files from a local folder.
 
-## 🚧 Challenges We Faced
-Describe the major technical or non-technical challenges your team encountered.
+Extracts key email attributes: Date, From, Subject, and Body.
 
-## 🏃 How to Run
-1. Clone the repository  
-   ```sh
-   git clone https://github.com/your-repo.git
-   ```
-2. Install dependencies  
-   ```sh
-   npm install  # or pip install -r requirements.txt (for Python)
-   ```
-3. Run the project  
-   ```sh
-   npm start  # or python app.py
-   ```
+Uses OpenAI API to classify emails into Request Type and Sub Request Type.
 
-## 🏗️ Tech Stack
-- 🔹 Frontend: React / Vue / Angular
-- 🔹 Backend: Node.js / FastAPI / Django
-- 🔹 Database: PostgreSQL / Firebase
-- 🔹 Other: OpenAI API / Twilio / Stripe
+Provides confidence scores for classification accuracy.
 
+Detects duplicate emails to prevent redundant service requests.
+
+Displays extracted emails in a structured table format.
+
+Enables bulk processing of multiple emails at once.
+
+🛠️ How We Built It
+
+Frontend: macOS/Flutter (Desktop App)
+
+Email Parsing: Dart eml package (reads .EML files)
+
+AI Classification: gemini
+
+File Selection: File picker pod
+
+Networking: http package for API calls
+
+🚧 Challenges We Faced
+
+Handling rate limits from OpenAI API and Gemini (Solution: Implemented retries & error handling).
+
+Ensuring valid JSON output from AI responses (Solution: Prompt engineering & structured parsing).
+
+Extracting structured data from email bodies & attachments (Solution: Priority-based extraction rules).
+
+Managing duplicate email detection efficiently.
+
+🏃 How to Run
+
+Clone the repository
+
+https://github.com/ewfx/gaied-gen-explorers.git
+
+Navigate to the project directory
+
+Install dependencies
+
+Run the application as Desktop app
+
+🏰 Tech Stack
+
+🔹 Frontend: SwifUI (Desktop App)
+
+🔹 Email Parsing: EML Parser
+
+🔹 AI Classification: Gemini API
+
+🔹 Networking: HTTP Package
+
+🔹 File Handling: File Picker Plugin
+
+This Desktop app automates email triage and classification, reducing manual workload and improving processing efficiency. 🚀
 ## 👥 Team
-- **Your Name** - [GitHub](#) | [LinkedIn](#)
-- **Teammate 2** - [GitHub](#) | [LinkedIn](#)
+- **Sudhanshu Kumar** - [GitHub](#) | [LinkedIn](#)
+- **Neha Vishnoi** - [GitHub](#) | [LinkedIn](#)
+- **Basavaraj T** - [GitHub](#) | [LinkedIn](#)
+- **Avinash Shyam** - [GitHub](#) | [LinkedIn](#)
