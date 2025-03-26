@@ -47,6 +47,8 @@ Displays extracted emails in a structured table format.
 Enables bulk processing of multiple emails at once.
 
 🛠️ How We Built It
+![image](https://github.com/user-attachments/assets/b4b5ae0a-9539-40c4-869b-a90748227387)
+
 
 Frontend: macOS/Flutter (Desktop App)
 
