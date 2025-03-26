@@ -45,7 +45,7 @@ struct SummaryResponse: Codable {
     let summary: [SummaryItem]
 }
 
-struct SummaryItem: Codable, Identifiable {
+struct SummaryItem: Codable, Identifiable, Hashable, Equatable {
     let id = UUID()
     let filename: String?
     let issueSummary: String?
@@ -53,10 +53,12 @@ struct SummaryItem: Codable, Identifiable {
     let requestSubtype: String?
     let confidenceScore: Int?
     let namedEntities: NamedEntities?
-    
+    static func == (lhs: SummaryItem, rhs: SummaryItem) -> Bool {
+        return lhs.id == rhs.id // ✅ Compares by ID
+    }
 }
 
-struct NamedEntities: Codable {
+struct NamedEntities: Codable, Hashable, Equatable {
     let org: [String]?
     let money: [String]?
     let email: [String]?

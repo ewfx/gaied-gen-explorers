@@ -58,7 +58,7 @@ struct ContentView: View {
                             .padding()
                     } else {
                         List(filteredItems) { item in
-                            SummaryRowView(summaryItem: item)
+                            SummaryRowView(summaryItem: item, isSelected: selectedItem == item)
                                 .onTapGesture {
                                     selectedItem = item
                                 }
@@ -172,6 +172,7 @@ struct ContentView: View {
 
 struct SummaryRowView: View {
     let summaryItem: SummaryItem
+    let isSelected: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -226,7 +227,9 @@ struct SummaryRowView: View {
         .padding()
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray)))
         .shadow(radius: 2)
-        .padding(.horizontal)
+        .shadow(radius: isSelected ? 5 : 2) // ✅ Slight glow for selected item
+        .animation(.easeInOut(duration: 0.2), value: isSelected) // ✅ Smooth transition
+        .frame(maxWidth: .infinity)
     }
 }
 
