@@ -23,6 +23,10 @@ A brief overview of your project and its purpose. Mention which problem statemen
 
 ![Screenshot 1](link-to-image)
 
+https://github.com/user-attachments/assets/ec2b8f7f-8f28-4fcf-932d-03977b2a9e3c
+
+
+
 ## 💡 Inspiration
 What inspired you to create this project? Describe the problem you're solving.
 
