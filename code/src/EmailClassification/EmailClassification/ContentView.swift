@@ -9,7 +9,7 @@ import SwiftUI
 import AppKit
 
 struct ContentView: View {
-    @State var summaryItems: [SummaryItem]?
+    @State var summaryItems: [SummaryResponse]?
     
     var body: some View {
         VStack {
@@ -32,7 +32,7 @@ struct ContentView: View {
                 do {
                     let fileManager = FileManager.default
                     let fileURLs = try fileManager.contentsOfDirectory(at: selectedFolderURL, includingPropertiesForKeys: nil)
-                    
+                    summaryItems = [SummaryResponse]()
                     for fileURL in fileURLs {
                         if fileURL.isFileURL {
                             let content = FileProcessor.extractText(from: fileURL)
@@ -41,7 +41,7 @@ struct ContentView: View {
                             
                             // Send content to LLM for NER analysis
                             Services.analyzeNERWithGemini(with: content) { summaryResponse in
-                                if let item = summaryResponse?.summary.first {
+                                if let item = summaryResponse {
                                     summaryItems?.append(item)
                                 }
                                 print("summaryItemss: \(String(describing: summaryItems))")
