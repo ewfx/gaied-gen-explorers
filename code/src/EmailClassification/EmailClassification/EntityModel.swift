@@ -57,8 +57,22 @@ struct SummaryItem: Codable, Identifiable {
 }
 
 struct NamedEntities: Codable {
-    let ORG: [String]?
-    let MONEY: [String]?
-    let EMAIL: [String]?
+    let org: [String]?
+    let money: [String]?
+    let email: [String]?
+
+    enum CodingKeys: String, CodingKey {
+        case org = "ORG"
+        case money = "MONEY"
+        case email = "EMAIL"
+    }
+
+    // Provide default values for missing keys
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        org = try container.decodeIfPresent([String].self, forKey: .org) ?? []
+        money = try container.decodeIfPresent([String].self, forKey: .money) ?? []
+        email = try container.decodeIfPresent([String].self, forKey: .email) ?? []
+    }
 }
 

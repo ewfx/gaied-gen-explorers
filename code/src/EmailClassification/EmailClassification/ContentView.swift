@@ -57,7 +57,7 @@ struct ContentView: View {
                             .foregroundColor(.gray)
                             .padding()
                     } else {
-                        List(summaryItems) { item in
+                        List(filteredItems) { item in
                             SummaryRowView(summaryItem: item)
                                 .onTapGesture {
                                     selectedItem = item
@@ -84,9 +84,9 @@ struct ContentView: View {
                         Text("🔎 Confidence Score: \(selectedItem.confidenceScore ?? 0)%")
                             .font(.subheadline)
 
-                        Text("🏢 Organizations: \(selectedItem.namedEntities?.ORG?.joined(separator: ", ") ?? "")")
-                        Text("💰 Money: \(selectedItem.namedEntities?.MONEY?.joined(separator: ", ") ?? "")")
-                        Text("📧 Emails: \(selectedItem.namedEntities?.EMAIL?.joined(separator: ", ") ?? "")")
+                        Text("🏢 Organizations: \(selectedItem.namedEntities?.org?.joined(separator: ", ") ?? "")")
+                        Text("💰 Money: \(selectedItem.namedEntities?.money?.joined(separator: ", ") ?? "")")
+                        Text("📧 Emails: \(selectedItem.namedEntities?.email?.joined(separator: ", ") ?? "")")
                     }
                     .padding()
                 } else {
@@ -125,47 +125,45 @@ struct ContentView: View {
         } else {
             filteredItems = summaryItems.filter { $0.requestType == selectedFilter }
         }
+        selectedItem = filteredItems.first
     }
     
     func processFiles(in selectedFolderURL: URL) {
-        isProcessing = true  // 🔄 Start Activity Indicator
-        
+        isProcessing = true  // 🔄 Show Activity Indicator
+
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let fileManager = FileManager.default
                 let fileURLs = try fileManager.contentsOfDirectory(at: selectedFolderURL, includingPropertiesForKeys: nil)
 
-                var pendingRequests = fileURLs.count  // Track remaining tasks
-                summaryItems = []
+                var pendingRequests = fileURLs.count  // Track pending tasks
+
                 for fileURL in fileURLs {
                     if fileURL.isFileURL {
                         let content = FileProcessor.extractText(from: fileURL)
-                        print("File: \(fileURL.lastPathComponent)")
-                        print("Content: \(content)")
 
-                        // Send content to LLM for NER analysis
+                        // 🔍 Analyze file using LLM
                         Services.analyzeNERWithGemini(with: content) { summaryResponse in
                             DispatchQueue.main.async {
                                 if let item = summaryResponse {
                                     summaryItems.append(item)
+                                    applyFilter() // ✅ Update the filter after adding items
                                 }
-                                
-                                pendingRequests -= 1  // ✅ Reduce pending task count
-                                
-                                // Hide indicator when all files are processed
+
+                                pendingRequests -= 1
                                 if pendingRequests == 0 {
-                                    isProcessing = false  // ✅ Stop Activity Indicator
+                                    isProcessing = false
                                 }
                             }
                         }
                     } else {
-                        pendingRequests -= 1  // ✅ Reduce count if not a file
+                        pendingRequests -= 1
                     }
                 }
             } catch {
-                print("❌ Error reading folder contents: \(error.localizedDescription)")
+                print("❌ Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
-                    isProcessing = false  // ✅ Stop indicator on failure
+                    isProcessing = false
                 }
             }
         }
@@ -187,11 +185,13 @@ struct SummaryRowView: View {
             HStack {
                 
                 Text("Request type:")
-                    .font(.subheadline)
+                    .font(.system(size: 14))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
 
                 Text(summaryItem.requestType ?? "")
-                    .font(.subheadline)
+                    .font(.system(size: 12))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
             }
             
@@ -199,11 +199,13 @@ struct SummaryRowView: View {
             HStack {
                 
                 Text("Subrequest type:")
-                    .font(.subheadline)
+                    .font(.system(size: 14))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
 
                 Text("\(summaryItem.requestSubtype ?? "")")
-                    .font(.subheadline)
+                    .font(.system(size: 12))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
             }
             
@@ -211,11 +213,13 @@ struct SummaryRowView: View {
             HStack {
                 
                 Text("Confidence Score:")
-                    .font(.subheadline)
+                    .font(.system(size: 14))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
 
                 Text("\(summaryItem.confidenceScore ?? 0)")
-                    .font(.subheadline)
+                    .font(.system(size: 12))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
             }
         }
